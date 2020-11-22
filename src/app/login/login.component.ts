@@ -9,8 +9,8 @@ declare const gapi;
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
-  gLoaded= false;
-  constructor(private loadScript: ScriptLoaderService, private _ngZone: NgZone,private router:Router) { }
+  gLoaded = false;
+  constructor(private loadScript: ScriptLoaderService, private _ngZone: NgZone, public router: Router) { }
   ngOnInit(): void {
     let gAPI$ = this.loadScript.load({
       name: "google-signin-api",
@@ -23,14 +23,13 @@ export class LoginComponent implements OnInit {
       loaded: false
     });
     merge(gAPI$, gPlateForm$).subscribe((e) => {
-      console.log(e);
       gapi.load('auth2', () => {
         gapi.auth2.init({
           "client_id": '931487578639-52rhohr1rqcm5palsbeg5tpetbd0bkrm.apps.googleusercontent.com'
         }).then(() => {
           this.renderInButton();
-        })
-      })
+        });
+      });
     });
   }
 
@@ -43,17 +42,19 @@ export class LoginComponent implements OnInit {
       'theme': 'dark',
       'onsuccess': this.onSuccess.bind(this),
       'onfailure': this.onFailure.bind(this)
+    }).then(()=>{
+      this._ngZone.run(() => {
+        setTimeout(()=>{
+          this.gLoaded = true;
+        },10);
+      })
     });
-    this._ngZone.run(()=>{
-      this.gLoaded = true;
-    })
   }
   onSuccess() {
-    this._ngZone.run(()=>{
+    this._ngZone.run(() => {
       this.router.navigate(['./home']);
     })
   }
   onFailure() {
-
   }
 }
