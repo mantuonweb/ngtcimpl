@@ -123,6 +123,10 @@
           }
         }
       }
-    }},
-  "defaultProject": "ngtc"
+    }
+  },
+  "defaultProject": "ngtc",
+  "cli": {
+    "analytics": "26431efd-9183-486d-9b36-7210d4fc4384"
+  }
 }
