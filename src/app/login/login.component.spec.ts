@@ -8,13 +8,14 @@ import { of } from 'rxjs';
 describe('LoginComponent', () => {
   let component: LoginComponent;
   let fixture: ComponentFixture<LoginComponent>;
-
+//https://angular.io/api/core/testing/fakeAsync
   const mockScriptLoader={
     load:()=>{
       return of({});
     }
   }
   //https://angular.io/guide/dependency-injection-providers
+  //https://angular.io/guide/testing
   beforeEach(async(() => {
     window['gapi'] = {
       load(param,cb) {
