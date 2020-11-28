@@ -39,8 +39,8 @@ describe('HomeComponent', () => {
     component.onGridReady({});
     fixture.detectChanges();
     fixture.whenStable().then(()=>{
-      done();
       expect(component.rowData.length).toBe(2);
+      done();
     });
   });
 });
