@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CampaignService } from './campaign.service';
-
+import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
+import { AddCampaignComponent } from './add-campaign/add-campaign.component';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -16,7 +17,8 @@ export class HomeComponent implements OnInit {
   rowData = [];
   gridApi;
   gridColumnApi;
-  constructor(private campaignService:CampaignService) { }
+  bsModalRef: BsModalRef;
+  constructor(private campaignService:CampaignService,private modalService: BsModalService) { }
 
   ngOnInit(): void {
   }
@@ -30,5 +32,17 @@ export class HomeComponent implements OnInit {
       this.rowData = data;
     })
   }
-
+  add(){
+    const initialState = {
+      list: [
+        'Open a modal with component',
+        'Pass your data',
+        'Do something else',
+        '...'
+      ],
+      title: 'Modal with component'
+    };
+    this.bsModalRef = this.modalService.show(AddCampaignComponent, {initialState});
+    this.bsModalRef.content.closeBtnName = 'Close';
+  }
 }

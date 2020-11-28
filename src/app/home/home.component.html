@@ -1,9 +1,8 @@
-<ag-grid-angular
-    style="width: 100%; height: 500px;"
-    class="ag-theme-alpine"
-    [rowData]="rowData"
-    [columnDefs]="columnDefs"
-    (gridReady)="onGridReady($event)"
-    (firstDataRendered)="onFirstDataRendered($event)"
->
+<div class="action-bar">
+    <button type="button"  class="btn btn-primary add-campaign" (click)="add()">
+        Add
+    </button>
+</div>
+<ag-grid-angular style="width: 100%; height: 500px;" class="ag-theme-alpine" [rowData]="rowData"
+    [columnDefs]="columnDefs" (gridReady)="onGridReady($event)" (firstDataRendered)="onFirstDataRendered($event)">
 </ag-grid-angular>
