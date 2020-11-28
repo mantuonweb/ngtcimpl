@@ -42,13 +42,12 @@ export class LoginComponent implements OnInit {
       'theme': 'dark',
       'onsuccess': this.onSuccess.bind(this),
       'onfailure': this.onFailure.bind(this)
-    }).then(()=>{
-      this._ngZone.run(() => {
-        setTimeout(()=>{
-          this.gLoaded = true;
-        },10);
-      })
     });
+    this._ngZone.run(() => {
+      setTimeout(()=>{
+        this.gLoaded = true;
+      },10);
+    })
   }
   onSuccess() {
     this._ngZone.run(() => {
