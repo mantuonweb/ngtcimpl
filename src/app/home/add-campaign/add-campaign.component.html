@@ -1,14 +1,42 @@
 <div class="modal-header">
     <h4 class="modal-title pull-left">{{title}}</h4>
-    <button type="button" class="close pull-right" aria-label="Close" (click)="bsModalRef.hide()">
+    <button type="button" class="close pull-right" aria-label="Close" (click)="close()">
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
+  <form [formGroup]="campaignForm" (submit)="save()">
   <div class="modal-body">
-    <ul *ngIf="list.length">
-      <li *ngFor="let item of list">{{item}}</li>
-    </ul>
+   
+      <div class="form-group">
+        <label for="campId">Campaign ID</label>
+        <input type="text" class="form-control" id="campId" placeholder="Campaign ID" formControlName="campaignID">
+      </div>
+      <div class="form-group">
+        <label for="campName">Name</label>
+        <input type="text" class="form-control" id="campName" placeholder="Campaign Name" formControlName="campaignName">
+      </div>
+      <div class="form-group">
+        <label for="startDate">Start Date</label>
+        <input type="text"
+        id="startDate"
+        placeholder="Start Date"
+        formControlName="startDate"
+        class="form-control"
+        bsDatepicker>
+      </div>
+      <div class="form-group">
+        <label for="endDate">End Date</label>
+        <input type="text"
+        id="endDate"
+        placeholder="End Date"
+        class="form-control"
+        formControlName="endDate"
+        bsDatepicker>
+      </div>
+      <!-- <button type="submit" class="btn btn-primary">Submit</button> -->
+   
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-default" (click)="bsModalRef.hide()">{{closeBtnName}}</button>
+    <button type="submit" class="btn btn-primary">{{editCampaignData?"Update":"Save"}}</button>
   </div>
+</form>

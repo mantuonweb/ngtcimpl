@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { CampaignService } from './campaign.service';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { AddCampaignComponent } from './add-campaign/add-campaign.component';
+import { CellEditCampaignComponent } from './cell/edit.component';
+import { GridOptions } from 'ag-grid-community';
+import { CellDeleteCampaignComponent } from './cell/delete.component';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -9,16 +12,24 @@ import { AddCampaignComponent } from './add-campaign/add-campaign.component';
 })
 export class HomeComponent implements OnInit {
   columnDefs = [
-    { field: 'campaign_id', headerName: 'ID' },
-    { field: 'campaign_name',headerName: 'Name' },
-    { field: 'start_date',headerName: 'Start Date' },
-    { field: 'end_date',headerName: 'End Date' }
+    { field: 'campaignID', headerName: 'ID' },
+    { field: 'campaignName', headerName: 'Name' },
+    { field: 'startDate', headerName: 'Start Date' },
+    { field: 'endDate', headerName: 'End Date' },
+    { field: "edit", headerName: "", cellRendererFramework: CellEditCampaignComponent },
+    { field: "delete", headerName: "", cellRendererFramework: CellDeleteCampaignComponent },
+    
   ];
   rowData = [];
   gridApi;
   gridColumnApi;
   bsModalRef: BsModalRef;
-  constructor(private campaignService:CampaignService,private modalService: BsModalService) { }
+  gridOptions = <GridOptions>{
+    context: {
+      componentParent: this
+    }
+  };
+  constructor(private campaignService: CampaignService, private modalService: BsModalService) { }
 
   ngOnInit(): void {
   }
@@ -28,21 +39,37 @@ export class HomeComponent implements OnInit {
   onGridReady(params) {
     this.gridApi = params.api;
     this.gridColumnApi = params.columnApi;
-    this.campaignService.getCampaigns().subscribe((data:any[])=>{
+    this.getData();
+  }
+  getData(){
+    this.campaignService.getCampaigns().subscribe((data: any[]) => {
       this.rowData = data;
     })
   }
-  add(){
+  add() {
     const initialState = {
-      list: [
-        'Open a modal with component',
-        'Pass your data',
-        'Do something else',
-        '...'
-      ],
-      title: 'Modal with component'
+      title: 'Add Campaign'
     };
-    this.bsModalRef = this.modalService.show(AddCampaignComponent, {initialState});
-    this.bsModalRef.content.closeBtnName = 'Close';
+    this.bsModalRef = this.modalService.show(AddCampaignComponent, { initialState });
+    this.bsModalRef.content.closeBtnName = 'Save';
+    this.bsModalRef.onHidden.subscribe(()=>{
+      this.getData();
+    });
+  }
+  edit(campaign) {
+    const initialState = {
+      title: 'Edit Campaign',
+      editCampaignData: campaign
+    };
+    this.bsModalRef = this.modalService.show(AddCampaignComponent, { initialState });
+    this.bsModalRef.content.closeBtnName = 'Update';
+    this.bsModalRef.onHidden.subscribe(()=>{
+      this.getData();
+    });
+  }
+  delete(campaign) {
+    this.campaignService.deleteCampaign(campaign).subscribe(()=>{
+      this.getData();
+    });
   }
 }
