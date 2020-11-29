@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CampaignService } from './campaign.service';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
+import { take } from 'rxjs/operators';
+
 import { AddCampaignComponent } from './add-campaign/add-campaign.component';
 import { CellEditCampaignComponent } from './cell/edit.component';
 import { GridOptions } from 'ag-grid-community';
@@ -29,7 +31,7 @@ export class HomeComponent implements OnInit {
       componentParent: this
     }
   };
-  constructor(private campaignService: CampaignService, private modalService: BsModalService) { }
+  constructor(public campaignService: CampaignService, private modalService: BsModalService) { }
 
   ngOnInit(): void {
   }
@@ -51,9 +53,8 @@ export class HomeComponent implements OnInit {
       title: 'Add Campaign'
     };
     this.bsModalRef = this.modalService.show(AddCampaignComponent, { initialState });
-    this.bsModalRef.content.closeBtnName = 'Save';
-    this.bsModalRef.onHidden.subscribe(()=>{
-      this.getData();
+    this.bsModalRef.content.onSuccess.pipe(take(1)).subscribe((resp)=>{
+      this.refreshData(resp);
     });
   }
   edit(campaign) {
@@ -62,10 +63,15 @@ export class HomeComponent implements OnInit {
       editCampaignData: campaign
     };
     this.bsModalRef = this.modalService.show(AddCampaignComponent, { initialState });
-    this.bsModalRef.content.closeBtnName = 'Update';
-    this.bsModalRef.onHidden.subscribe(()=>{
-      this.getData();
+    this.bsModalRef.content.onSuccess.pipe(take(1)).subscribe((resp)=>{
+      this.refreshData(resp);
     });
+  }
+  refreshData(resp){
+    if(resp){
+      this.bsModalRef.hide();
+      this.getData();
+    }
   }
   delete(campaign) {
     this.campaignService.deleteCampaign(campaign).subscribe(()=>{

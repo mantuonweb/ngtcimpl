@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { BsModalRef } from 'ngx-bootstrap/modal';
+import { Subject } from 'rxjs/internal/Subject';
 import { CampaignService } from '../campaign.service';
 
 @Component({
@@ -14,7 +15,10 @@ export class AddCampaignComponent implements OnInit {
   closeBtnName: string;
   campaignForm:FormGroup;
   editCampaignData;
-  constructor(public bsModalRef: BsModalRef,private fb: FormBuilder,private campaignService:CampaignService) {}
+  public onSuccess: Subject<boolean>;
+  constructor(public bsModalRef: BsModalRef,private fb: FormBuilder,private campaignService:CampaignService) {
+    this.onSuccess = new Subject();
+  }
  
   ngOnInit() {
     this.campaignForm = this.fb.group({
@@ -33,12 +37,12 @@ export class AddCampaignComponent implements OnInit {
   save(){
     if(this.editCampaignData){
       this.campaignService.updateCampaign(this.campaignForm.value).subscribe(()=>{
-        this.bsModalRef.hide();
+        this.onSuccess.next(true);
       });
     }
     else{
       this.campaignService.saveCampaign(this.campaignForm.value).subscribe(()=>{
-        this.bsModalRef.hide();
+        this.onSuccess.next(true);
       });
     }
 
